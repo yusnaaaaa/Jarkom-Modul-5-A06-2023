@@ -29,3 +29,27 @@
 	- [Penyelesaian soal 9](#penyelesaian-soal-9)
 - [Soal 10](#soal-10)
 	- [Penyelesaian soal 10](#penyelesaian-soal-10)
+
+## Topologi
+## Soal 1
+### Penyelesaian soal 1
+## Soal 2
+### Penyelesaian soal 2
+## Soal 3
+### Penyelesaian soal 3
+## Soal 4
+### Penyelesaian soal 4
+## Soal 4
+### Penyelesaian soal 4
+## Soal 5
+### Penyelesaian soal 5
+## Soal 6
+### Penyelesaian soal 6
+## Soal 7
+### Penyelesaian soal 7
+## Soal 8
+### Penyelesaian soal 8
+## Soal 9
+### Penyelesaian soal 9
+## Soal 10
+### Penyelesaian soal 10
