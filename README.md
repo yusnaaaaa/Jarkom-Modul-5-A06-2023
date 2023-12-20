@@ -318,21 +318,84 @@ Hasil dari nomor ini nantinya tiap route dapat melakukan ping keluar (misalnya: 
 Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
 
 ### Penyelesaian soal 2
+Soal ini dapat diselesaikan dengan menggunakan syntax seperti berikut : 
+```
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+iptables -A INPUT -p tcp ! --dport 8080 -j DROP
+iptables -A INPUT -p udp -j DROP
+```
+
+Dari syntax tersebut, terlihat bahwa node hanya dapat menerima koneksi yang berasal dari port 8080 dan menggunakan protokol TCP.
+Untuk membuka koneksi dari client dapat menggunakan command seperti dibawah ini :
+```
+nc -l -p 8080
+```
+
+Berikut merupakan testing dengan port 8080 dan selain port 8080 :
+<img width="227" alt="no2a" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/978f7d1e-e0e4-44e2-bc8d-e5b20d5783f4"></br>
+
+<img width="259" alt="no2b" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/d988c011-cbb3-4fa3-9af9-a5d7b1e9ce2f"></br>
+
+<img width="273" alt="no2c" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/ceed8ca8-7191-4a5a-904f-ae8207f132af"></br>
+
+<img width="237" alt="no2d" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/a89f7442-8c02-4af5-a748-821a00b1da76"></br>
+
+Dari hasil testing, terlihat bahwa koneksi yang menggunakan port 8080 memiliki kemampuan untuk mengirim dan menerima pesan, sementara untuk koneksi melalui selain port 8080 tidak.
+
 
 ## Soal 3
 Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
 
 ### Penyelesaian soal 3
+Soal ini dapat diselesaikan dengan menggunakan syntax seperti berikut : 
+```
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
+```
+
+Berikut merupakan hasil testing dengan ping 4 node :
+
+Apabila berhasil maka hasilnya pada node ke 4 akan gagal melakukan ping dan gagal tersambung ke node tujuan.
 
 ## Soal 4
 Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
 
 ### Penyelesaian soal 4
+Untuk soal no 4 kita diminta untuk melakukan pembatasan subnet dari GrobeForest dan hanya bisa diakses oleh ip 22 atau SSH. Dalam mengerjakan soal ini dapat menggunakan syntax sebagai berikut pada masing-masing Web Server : 
+```
+iptables -A INPUT -p tcp --dport 22 -s 10.2.8.0/22 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+```
+Kemudian untuk melakukan testing dapat menggunakan command seperti dibawah ini : 
+```
+nc -l -p 22
+```
+Berikut merupakan hasil testing yang telah dilakukan :
+Testing pada GrobeForest :
+<img width="456" alt="no4grobe" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/2e398c57-e8fe-4724-963f-310cdac7663b"></br>
+
+Pada GrobeForest menunjukkan hasil open yang artinya tersambung. 
+Testing di selain GrobeForest :
+<img width="462" alt="no4selaingrobe" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/dee4fea7-d935-483e-870d-ec0126b01660"></br>
+
+Sedangkan untuk node lain filtered atau tidak berhasil tersambung.
 
 ## Soal 5
 Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
 
 ### Penyelesaian soal 5
+Untuk menyelesaikan soal 5 dapat menggunakan syntax sebagai berikut : 
+```
+iptables -A INPUT  -m time --weekdays Mon,Tue,Wed,Thu,Fri --timestart 08:00 --timestop 16:00 -p tcp --dport 22 -s 10.2.8.0/22 -j ACCEPT
+```
+Untuk melakukan testing sesuai dengan hari yang diinginkan kita dapat menambahkan command `date -u MMDDTTSSYYYY`
+Berikut merupakan hasil testing yang telah dilakukan : 
+
+
+<img width="438" alt="no5open" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/6c091116-2ea9-47fb-beee-c24dc4b7392e"></br>
+
+<img width="430" alt="no5filtered" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/363e100d-fc90-445a-b599-82f18aed1f8b"></br>
+Hasil akan menunjukkan open apabila webserver diakses oleh GrobeForest dengan date yang sesuai dan Hasil akan menunjukkan filtered apabila date nya tidak sesuai.
 
 ## Soal 6
 Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
