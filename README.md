@@ -216,8 +216,85 @@ iface eth0 inet dhcp
 ```
 
 ##### Atur Konfigurasi DHCP
+- Revolte - dhcp.conf
+```
+apt update
+apt install isc-dhcp-server -y
+echo ‘INTERFACESv4=”eth0”’ > /etc/default/isc-dhcp-server
+
+echo ‘
+subnet 10.2.14.128 netmask 255.255.255.252 {
+}
+subnet 10.2.14.132 netmask 255.255.255.252 {
+}
+
+subnet 10.2.14.136 netmask 255.255.255.252 {
+}
+
+subnet 10.2.14.140 netmask 255.255.255.252 {
+}
+
+subnet 10.2.14.144 netmask 255.255.255.252 {
+}
+
+subnet 10.2.14.148 netmask 255.255.255.252 {
+}
+
+subnet 10.2.14.0 netmask 255.255.255.128 {
+	range 10.2.14.3 10.2.14.126;
+	option routers 10.2.14.1;
+	option broadcast-address 10.2.14.127;
+	option domain-name-servers 10.2.14.146;
+	default-lease-time 180;
+	max-lease-time 5760;	
+}
+
+subnet 10.2.12.0 netmask 255.255.254.0 {
+	range 10.2.12.3 10.2.13.254;
+	option routers 10.2.12.1;
+	option broadcast-address 10.2.13.255;
+	option domain-name-servers 10.2.14.146;
+	default-lease-time 180;
+	max-lease-time 5760;	
+}
+
+subnet 10.2.0.0 netmask 255.255.248.0 {
+	range 10.2.0.3 10.2.7.254;
+	option routers 10.2.0.1;
+	option broadcast-address 10.2.7.255;
+	option domain-name-servers 10.2.14.146;
+	default-lease-time 180;
+	max-lease-time 5760;	
+}
+
+subnet 10.2.8.0 netmask 255.255.252.0 {
+	range 10.2.8.3 10.2.11.254;
+	option routers 10.2.8.1;
+	option broadcast-address 10.2.11.255;
+	option domain-name-servers 10.2.14.146;
+	default-lease-time 180;
+	max-lease-time 5760;	
+}’ >  /etc/dhcp/dhcpd.conf
+
+service isc-dhcp-server start
+```
 
 ##### Atur Konfigurasi DHCP RELAY
+```
+apt-get update
+apt-get install isc-dhcp-relay -y
+service isc-dhcp-relay start
+
+echo ‘
+SERVERS="10.2.14.150"
+
+# On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
+INTERFACES="eth0 eth1 eth2"
+
+# Additional options that are passed to the DHCP relay daemon?
+OPTIONS=""
+‘ > /etc/default/isc-dhcp-relay
+```
 
 ## Soal 1
 ### Penyelesaian soal 1
