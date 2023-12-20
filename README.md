@@ -331,14 +331,15 @@ Untuk membuka koneksi dari client dapat menggunakan command seperti dibawah ini 
 nc -l -p 8080
 ```
 
-Berikut merupakan testing dengan port 8080 dan selain port 8080 :
-<img width="227" alt="no2a" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/978f7d1e-e0e4-44e2-bc8d-e5b20d5783f4"></br>
+Berikut merupakan testing dengan port 8080 dan selain port 8080 : </br>
 
-<img width="259" alt="no2b" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/d988c011-cbb3-4fa3-9af9-a5d7b1e9ce2f"></br>
+<img width="700" alt="no2a" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/978f7d1e-e0e4-44e2-bc8d-e5b20d5783f4"></br>
 
-<img width="273" alt="no2c" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/ceed8ca8-7191-4a5a-904f-ae8207f132af"></br>
+<img width="700" alt="no2b" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/d988c011-cbb3-4fa3-9af9-a5d7b1e9ce2f"></br>
 
-<img width="237" alt="no2d" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/a89f7442-8c02-4af5-a748-821a00b1da76"></br>
+<img width="700" alt="no2c" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/ceed8ca8-7191-4a5a-904f-ae8207f132af"></br>
+
+<img width="700" alt="no2d" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/a89f7442-8c02-4af5-a748-821a00b1da76"></br>
 
 Dari hasil testing, terlihat bahwa koneksi yang menggunakan port 8080 memiliki kemampuan untuk mengirim dan menerima pesan, sementara untuk koneksi melalui selain port 8080 tidak.
 
@@ -372,11 +373,11 @@ nc -l -p 22
 ```
 Berikut merupakan hasil testing yang telah dilakukan :
 Testing pada GrobeForest :
-<img width="456" alt="no4grobe" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/2e398c57-e8fe-4724-963f-310cdac7663b"></br>
+<img width="700" alt="no4grobe" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/2e398c57-e8fe-4724-963f-310cdac7663b"></br>
 
 Pada GrobeForest menunjukkan hasil open yang artinya tersambung. 
 Testing di selain GrobeForest :
-<img width="462" alt="no4selaingrobe" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/dee4fea7-d935-483e-870d-ec0126b01660"></br>
+<img width="700" alt="no4selaingrobe" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/dee4fea7-d935-483e-870d-ec0126b01660"></br>
 
 Sedangkan untuk node lain filtered atau tidak berhasil tersambung.
 
@@ -392,9 +393,9 @@ Untuk melakukan testing sesuai dengan hari yang diinginkan kita dapat menambahka
 Berikut merupakan hasil testing yang telah dilakukan : 
 
 
-<img width="438" alt="no5open" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/6c091116-2ea9-47fb-beee-c24dc4b7392e"></br>
+<img width="700" alt="no5open" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/6c091116-2ea9-47fb-beee-c24dc4b7392e"></br>
 
-<img width="430" alt="no5filtered" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/363e100d-fc90-445a-b599-82f18aed1f8b"></br>
+<img width="700" alt="no5filtered" src="https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/363e100d-fc90-445a-b599-82f18aed1f8b"></br>
 Hasil akan menunjukkan open apabila webserver diakses oleh GrobeForest dengan date yang sesuai dan Hasil akan menunjukkan filtered apabila date nya tidak sesuai.
 
 ## Soal 6
