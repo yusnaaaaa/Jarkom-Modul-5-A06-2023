@@ -216,6 +216,45 @@ iface eth0 inet dhcp
 	gateway 10.2.14.1
 	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
+##### Routing
+- Aura
+```
+#KANAN
+route add -net 10.2.0.0 netmask 255.255.248.0 gw 10.2.14.130
+route add -net 10.2.8.0 netmask 255.255.252.0 gw 10.2.14.130
+
+#BAWAH
+route add -net 10.2.14.136 netmask 255.255.255.252 gw 10.2.14.134
+route add -net 10.2.14.140 netmask 255.255.255.252 gw 10.2.14.134
+route add -net 10.2.12.0 netmask 255.255.254.0 gw 10.2.14.134
+route add -net 10.2.14.0 netmask 255.255.255.128 gw 10.2.14.134
+route add -net 10.2.14.144 netmask 255.255.255.252 gw 10.2.14.134
+route add -net 10.2.14.148 netmask 255.255.255.252 gw 10.2.14.134
+```
+
+- Frieren
+```
+route add -net 10.2.12.0 netmask 255.255.254.0 gw 10.2.14.142
+route add -net 10.2.14.0 netmask 255.255.255.128 gw 10.2.14.142
+route add -net 10.2.14.144 netmask 255.255.255.252 gw 10.2.14.142
+route add -net 10.2.14.148 netmask 255.255.255.252 gw 10.2.14.142
+```
+
+- Himmel
+```
+route add -net 10.2.14.144 netmask 255.255.255.252 gw 10.2.14.2
+route add -net 10.2.14.148 netmask   255.255.255.252 gw 10.2.14.2
+```
+
+- Fern
+```
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.2.14.1
+```
+
+- Heiter
+```
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.2.14.129
+```
 
 ##### Atur Konfigurasi DHCP
 - Revolte - dhcp.conf
@@ -443,12 +482,12 @@ Setup pada Heiter
 ```
 iptables -A PREROUTING -t nat -p tcp --dport 80 -d 10.2.8.2 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.2.8.2
 
-iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.177.4.2 -j DNAT --to-destination 10.2.14.138
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 10.2.8.2 -j DNAT --to-destination 10.2.14.138
 ```
 ```
 iptables -A PREROUTING -t nat -p tcp --dport 443 -d 10.2.14.138 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.2.14.138
 
-iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.177.0.18 -j DNAT --to-destination 10.2.8.2
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 10.2.14.138 -j DNAT --to-destination 10.2.8.2
 ```
 
 `-A PREROUTING:` Menambahkan aturan pada chain PREROUTING (praproses sebelum routing).
