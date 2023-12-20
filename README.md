@@ -336,25 +336,148 @@ Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Seni
 Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
 
 ### Penyelesaian soal 6
+Setup Pada Stark dan Sein
+```
+iptables -A INPUT -p tcp --dport 22 -s 10.2.8.0/22 -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j DROP
+
+iptables -A INPUT -p tcp --dport 22 -s 10.2.8.0/22 -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j DROP
+```
+`-A INPUT` : Menambahkan aturan pada chain INPUT (penerimaan paket masuk).
+`-p tcp` : Menentukan protokol yang digunakan (TCP).
+dport 22: Menentukan port tujuan (22 untuk SSH).
+`-s 10.2.8.0/22` : Menentukan alamat sumber yang diizinkan (subnet 10.2.8.0/22).
+`-m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu` : Menggunakan modul waktu untuk menentukan waktu akses yang dibatasi. Aturan ini berlaku pada hari Senin hingga Kamis dari pukul 12:00 hingga 13:00.
+`-j DROP` : Menetapkan tindakan untuk menjatuhkan (DROP) paket yang sesuai dengan aturan di atas.
+
+Penjelasan baris ke 2 dengan baris pertama, hanya aturan ini berlaku pada hari Jumat (Fri) dari pukul 11:00 hingga 13:00.
+
+### Hasil
+
+![6mod5](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/89fb3227-2102-4133-9dc5-9f2f22b93b14)
+
+![6mod51](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/61580053-9d9d-43b9-ae05-cfdbca176148)
+
 
 ## Soal 7
 Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
 
 ### Penyelesaian soal 7
+Setup pada Heiter
+```
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 10.2.8.2 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.2.8.2
+
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.177.4.2 -j DNAT --to-destination 10.2.14.138
+```
+```
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 10.2.14.138 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.2.14.138
+
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.177.0.18 -j DNAT --to-destination 10.2.8.2
+```
+
+`-A PREROUTING:` Menambahkan aturan pada chain PREROUTING (praproses sebelum routing).
+`-t nat:` Menentukan tabel nat untuk manipulasi alamat jaringan.
+`-p tcp:` Menentukan protokol yang digunakan (TCP).
+`--dport 80:` Menentukan port tujuan (80 untuk HTTP). Pada bagian ini portnya dapat disesuaikan dengan port yang diinginkan.
+`-d 10.2.8.2:` Menentukan alamat tujuan (Sein).
+`-m statistic --mode nth --every 2 --packet 0:` Menggunakan modul statistik untuk distribusi paket setiap dua kali pertama. Ini berarti paket-paket pertama akan diarahkan ke Sein.
+`-j DNAT --to-destination 10.2.8.2:` Menetapkan tindakan untuk merubah alamat tujuan (Destination NAT) ke alamat Sein. Pada bagian ini dapat diubah dapa IP tujuan yang diinginkan
+
+Lakukan testing pada SEIN dan STARK
+- Untuk Port 80
+``` 
+while true; do nc -l -p 80 -c 'echo "ini sein"'; done
+while true; do nc -l -p 80 -c 'echo "ini stark"'; done
+```
+- Untuk Port 443 
+```
+while true; do nc -l -p 443 -c 'echo "ini sein"'; done
+while true; do nc -l -p 443 -c 'echo "ini stark"'; done
+```
+### Hasil
+
+IP Sein
+
+![7a](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/0bda3754-acca-401e-92c7-5a58c4045063)
+
+IP Stark
+
+![7b](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/eb4d54ee-d971-484b-b1b6-73b5065e6112)
 
 ## Soal 8
 Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses WebServer hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
 
 ### Penyelesaian soal 8
+Setup pada Stark dan Sein
+```
+Revolte_Subnet="10.2.14.148/30"
+Pemilu_Start=$(date -d "2023-10-19T00:00" +"%Y-%m-%dT%H:%M")
+Pemilu_End=$(date -d "2024-02-15T00:00" +"%Y-%m-%dT%H:%M")
+iptables -A INPUT -p tcp -s $Revolte_Subnet --dport 80 -m time --datestart "$Pemilu_Start" --datestop "$Pemilu_End" -j DROP
+```
+- Menetapkan nilai variabel `Revolte_Subnet` dengan subnet yang diidentifikasi sebagai "Revolte." Subnet ini adalah 10.2.14.148/30
+- Menetapkan nilai variabel `Pemilu_Start` dengan tanggal dan waktu mulai pemilu (19 Oktober 2023 pukul 00:00).
+- Menetapkan nilai variabel `Pemilu_End` dengan tanggal dan waktu berakhirnya pemilu (15 Februari 2024 pukul 00:00).
+
+`-A INPUT:` Menambahkan aturan pada chain INPUT (penerimaan paket masuk).
+`-p tcp:` Menentukan protokol yang digunakan (TCP).
+`-s $Revolte_Subnet:` Menentukan alamat sumber yang diizinkan (subnet Revolte).
+`--dport 80:` Menentukan port tujuan (80 untuk HTTP).
+`-m time --datestart "$Pemilu_Start" --datestop "$Pemilu_End":` Menggunakan modul waktu untuk menentukan periode akses yang dibatasi. Aturan ini berlaku mulai dari Pemilu_Start hingga Pemilu_End.
+`-j DROP:` Menetapkan tindakan untuk menjatuhkan (DROP) paket yang sesuai dengan aturan di atas.
+
+### Hasil
+
+![85](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/4e9d6365-30bd-459e-a351-2fb748d6f22d)
 
 ## Soal 9
 Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit. 
 (clue: test dengan nmap)
 
 ### Penyelesaian soal 9
+Setup pada Stark dan Sein
+```
+iptables -N portcheck
+```
+Menambahkan chain baru dengan nama portcheck menggunakan perintah -N.
+```
+iptables -A INPUT -m recent --name portcheck --update --seconds 600 --hitcount 20 -j DROP
+iptables -A FORWARD -m recent --name portcheck --update --seconds 600 --hitcount 20 -j DROP
+```
+`iptables -A INPUT:` Menambahkan aturan pada chain INPUT (penerimaan paket masuk).
+`iptables -A FORWARD:` Menambahkan aturan pada chain FORWARD (penerusan paket).
+`-m recent --name portcheck:` Menggunakan modul recent untuk melacak status paket berdasarkan nama recent (portcheck).
+`--update --seconds 600 --hitcount 20:` Menentukan bahwa aturan ini akan memeriksa paket yang datang dalam selang waktu 600 detik (10 menit) dan jika jumlah scan port mencapai 20, paket tersebut akan di-drop.
+`-j DROP:` Menetapkan tindakan untuk menjatuhkan (DROP) paket yang sesuai dengan aturan di atas.
+
+```
+iptables -A INPUT -m recent --name portcheck --set -j ACCEPT
+iptables -A FORWARD -m recent --name portcheck --set -j ACCEPT
+```
+`iptables -A INPUT:` Menambahkan aturan pada chain INPUT (penerimaan paket masuk).
+`iptables -A FORWARD:` Menambahkan aturan pada chain FORWARD (penerusan paket).
+`-m recent --name portcheck --set:` Menetapkan status paket menjadi "portcheck" (mencatat bahwa paket ini tidak terdeteksi sebagai scanning).
+`-j ACCEPT:` Menetapkan tindakan untuk menerima (ACCEPT) paket yang sesuai dengan aturan di atas.
+
+### Hasil
+
+![55](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/95f67779-99f5-4db8-8aa6-feae03503207)
 
 ## Soal 10
 Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level. 
 
 ### Penyelesaian soal 10
+Setup pada semua Node Router dan Server
+```
+iptables -A INPUT  -j LOG --log-level debug --log-prefix 'Dropped Packet' -m limit --limit 1/second --limit-burst 10
+```
+`-A INPUT:` Menambahkan aturan pada chain INPUT (penerimaan paket masuk).
+`-j LOG:` Menetapkan tindakan untuk melakukan logging paket.
+`--log-level debug:` Menentukan level log sebagai "debug."
+`--log-prefix 'Dropped Packet':` Menetapkan awalan pesan log untuk paket yang di-drop sebagai "Dropped Packet."
+`-m limit --limit 1/second --limit-burst 10:` Menggunakan modul limit untuk membatasi frekuensi logging. Aturan ini akan membatasi logging menjadi maksimal 1 pesan per detik dengan batasan 10 pesan jika melebihi batas tersebut.
+
+### Hasil
+
+![105](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/7deb178b-8d50-4af9-b02c-bd3b0f0c18e4)
+
 
