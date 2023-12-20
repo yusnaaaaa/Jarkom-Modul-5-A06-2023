@@ -312,7 +312,11 @@ Penjelasan Syntax :
 
 ```iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source "$IPETH0" -s 10.2.0.0/20``` : Baris ini digunakan untuk menambahkan aturan iptables pada tabel nat.
 
-Hasil dari nomor ini nantinya tiap route dapat melakukan ping keluar (misalnya: google.com) seperti gambar dibawah ini :
+Hasil dari nomor ini nantinya tiap route dapat melakukan ping keluar (misalnya: google.com) seperti gambar dibawah ini :</br>
+
+![no1a](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/20912219-9148-4256-b4b1-0c04ede9f1da)</br>
+
+![no1b](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/21fd12be-5562-49da-88c3-284ebd5d7537)
 
 ## Soal 2
 Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
@@ -343,7 +347,6 @@ Berikut merupakan testing dengan port 8080 dan selain port 8080 : </br>
 
 Dari hasil testing, terlihat bahwa koneksi yang menggunakan port 8080 memiliki kemampuan untuk mengirim dan menerima pesan, sementara untuk koneksi melalui selain port 8080 tidak.
 
-
 ## Soal 3
 Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
 
@@ -354,7 +357,15 @@ iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
 ```
 
-Berikut merupakan hasil testing dengan ping 4 node :
+Berikut merupakan hasil testing dengan ping 4 node : </br>
+
+![no3a](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/4289defa-448a-4c5d-8d80-2cdfacd451c3)
+
+![no3b](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/0e250677-10cb-49ed-a2d9-ca53713546a4)
+
+![no3c](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/84df8434-b342-420c-b11e-f70a195f7376)\
+
+![no3d](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/91377793/5c79b7e5-22a9-4467-8375-ebc941b29ad2)
 
 Apabila berhasil maka hasilnya pada node ke 4 akan gagal melakukan ping dan gagal tersambung ke node tujuan.
 
