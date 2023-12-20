@@ -31,6 +31,8 @@
 	- [Penyelesaian soal 10](#penyelesaian-soal-10)
 
 ## Topologi
+![topologi modul 5](https://github.com/yusnaaaaa/Jarkom-Modul-5-A06-2023/assets/114417418/05f5091c-9e3f-4cf8-981d-87cb6c9e77d2)
+
 ## Prefix IP
 Kelompok A06 memiliki prefix IP `10.2`
 ## Tree
